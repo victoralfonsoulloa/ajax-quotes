@@ -1,7 +1,7 @@
 FROM php:8.2-cli
 
 # Install any necessary PHP extensions or tools here
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl git
 
 # Set working directory
 WORKDIR /workspace
