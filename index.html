@@ -3,16 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <title>AJAX Quotes</title>
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Tulpen+One&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Qwitcher+Grypen:wght@700&display=swap');
+
+
+        #quote-container {
+            display: none;
+            text-shadow: 4px 4px 4px #aaa;
+        }
+
+        /* CSS for the fade-in animation */
+        .fade-in {
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+  </style>
 </head>
 <body>
   <h1>AJAX Quotes</h1>
-  <button onclick="getRandomQuote()">Get Randon Quote</button>
-  <div id="result"></div>
+  <div id="quote-container">Quote goes here!</div>
 
   <script>
+    var counter = 0;
+
     function getRandomQuote() {
-      alert("Can you see this?");
+
+      var fonts = ["Qwitcher Grypen", "Tulpen One", "Shadows Into Light"]
+      // alert("Can you see this?");
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "random_quotes.php", true);
+
+      xhr.onload = function(){
+        //code to run on return of data
+
+        if(xhr.status==200){// Data is good, show it!
+          // alert(xhr.responseText);
+          // document.querySelector("#quote-container").innerText = xhr.responseText;
+
+          let el = document.querySelector("#quote-container");
+          el.innerHTML = xhr.responseText;// Adds text
+          el.style.display = "block";
+          el.style.fontFamily = fonts[counter];
+          counter++;
+
+          if(counter >= fonts.length) {// Reset counter
+            counter = 0;
+          }
+
+          el.classList.add("fade-in");
+          setTimeout(function(){
+            el.classList.remove("fade-in");
+          }, 1000);
+        } else {// Not good?
+          alert("No good data returned");
+        }
+      };
+
+      xhr.onerror = function(){
+        //code to run on error
+        alert("AJAX error");
+        
+      };
+
+      xhr.send();
     }
+
+    function displayRandomQuote() {
+        // Will load quote on page load and at intervals
+        // run on initial page load 
+        getRandomQuote();
+
+        setInterval(getRandomQuote, 5000);
+      }
+
+    displayRandomQuote();
   </script>
 </body>
 </html>
